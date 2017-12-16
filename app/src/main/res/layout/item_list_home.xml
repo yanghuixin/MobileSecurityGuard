@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/iv_list_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/tv_list_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="手机防盗"
+        android:textSize="20sp"
+        android:textColor="@color/colorBlack"
+        android:layout_marginTop="5dp"/>
+</LinearLayout>
