@@ -126,9 +126,10 @@ public class SplashActivity extends Activity {
      * 升级弹窗
      */
     private void showUpdateDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);//这个必须要传一个activity对象
         builder.setTitle("发现新版本" + versionName);
         builder.setMessage(des);
+        //builder.setCancelable(false);//不可取消，点返回键弹窗不消失，尽量不要用
         builder.setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -138,6 +139,13 @@ public class SplashActivity extends Activity {
         builder.setNegativeButton("以后再说", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                enterHome();
+            }
+        });
+        //用户取消弹框的监听，比如点击返回键
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
                 enterHome();
             }
         });
@@ -204,6 +212,13 @@ public class SplashActivity extends Activity {
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.setDataAndType(Uri.fromFile(file),
                 "application/vnd.android.package-archive");
-        startActivity(intent);
+        startActivityForResult(intent, 0);
+    }
+
+    //用户取消安装应用，回调此方法
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        enterHome();
     }
 }
