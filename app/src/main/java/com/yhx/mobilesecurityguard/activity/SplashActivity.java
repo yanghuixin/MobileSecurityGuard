@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -43,6 +44,7 @@ public class SplashActivity extends Activity {
     private TextView tv_splash_edition;
     private TextView tv_progress;
     private RelativeLayout rl_splash;
+    private SharedPreferences sp;
 
     //10.0.2.2是预留ip，供模拟器访问PC的服务器
     private final static String JSONURL = "http://192.168.2.101:8080/update66.json";
@@ -82,7 +84,15 @@ public class SplashActivity extends Activity {
         tv_splash_edition.setText("版本名：" + VersionInformationUtils.getVersionName(this));
         tv_progress = findViewById(R.id.tv_progress);
         rl_splash = findViewById(R.id.rl_splash);
-        checkVersion();
+        sp = getSharedPreferences("config", MODE_PRIVATE);
+        if (sp.getBoolean("auto_update", true)){//需要检查版本
+            checkVersion();
+        }else {
+            //发送延时2秒的消息，再跳转主页面
+            handler.sendEmptyMessageDelayed(CODE_ENTER_HOME, 2000);
+        }
+
+        //渐变动画
         AlphaAnimation animation = new AlphaAnimation(0.2f, 1);
         animation.setDuration(2000);
         rl_splash.startAnimation(animation);
@@ -96,17 +106,21 @@ public class SplashActivity extends Activity {
                 String result = VersionInformationUtils.getResult(JSONURL);
                 Message msg = Message.obtain();
                 try {
-                    //解析json
-                    JSONObject json = new JSONObject(result);
-                    versionName = json.getString("versionName");
-                    versionCode = json.getInt("versionCode");
-                    des = json.getString("des");
-                    url = json.getString("url");
-                    if (VersionInformationUtils.getVersionCode(SplashActivity.this) < versionCode){
-                        //showUpdateDialog();
-                        msg.what = CODE_UPDATE_DIALOG;
-                    } else{
-                        msg.what = CODE_ENTER_HOME;
+                    if (result == null){
+                        msg.what = CODE_ERROR;
+                    }else {
+                        //解析json
+                        JSONObject json = new JSONObject(result);
+                        versionName = json.getString("versionName");
+                        versionCode = json.getInt("versionCode");
+                        des = json.getString("des");
+                        url = json.getString("url");
+                        if (VersionInformationUtils.getVersionCode(SplashActivity.this) < versionCode){
+                            //showUpdateDialog();
+                            msg.what = CODE_UPDATE_DIALOG;
+                        } else{
+                            msg.what = CODE_ENTER_HOME;
+                        }
                     }
                 } catch (JSONException e) {
                     msg.what = CODE_ERROR;

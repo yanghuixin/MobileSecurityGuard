@@ -1,8 +1,11 @@
 package com.yhx.mobilesecurityguard.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.yhx.mobilesecurityguard.R;
@@ -30,5 +33,17 @@ public class HomeActivity extends Activity {
 
         gv_home = findViewById(R.id.gv_home);
         gv_home.setAdapter(new HomeAdapter(this, homeNames, imageIds));
+        gv_home.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 8:
+                        //设置中心
+                        startActivity(new Intent(getApplicationContext(), SettingActivity
+                        .class));
+                        break;
+                }
+            }
+        });
     }
 }
