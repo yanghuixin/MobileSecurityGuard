@@ -1,5 +1,6 @@
 package com.yhx.mobilesecurityguard.activity;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,7 +9,7 @@ import android.view.View;
 import com.yhx.mobilesecurityguard.R;
 import com.yhx.mobilesecurityguard.view.SettingItemView;
 
-public class SettingActivity extends AppCompatActivity {
+public class SettingActivity extends Activity {
 
     private SettingItemView siv_update;
     private SharedPreferences sp;
