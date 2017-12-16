@@ -77,6 +77,10 @@ public class VersionInformationUtils {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (conn != null){
+                conn.disconnect();
+            }
         }
         return null;
     }

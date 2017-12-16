@@ -12,6 +12,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +42,7 @@ public class SplashActivity extends Activity {
 
     private TextView tv_splash_edition;
     private TextView tv_progress;
+    private RelativeLayout rl_splash;
 
     //10.0.2.2是预留ip，供模拟器访问PC的服务器
     private final static String JSONURL = "http://192.168.2.101:8080/update66.json";
@@ -77,10 +80,12 @@ public class SplashActivity extends Activity {
 
         tv_splash_edition = findViewById(R.id.tv_splash_edition);
         tv_splash_edition.setText("版本名：" + VersionInformationUtils.getVersionName(this));
-
         tv_progress = findViewById(R.id.tv_progress);
-
+        rl_splash = findViewById(R.id.rl_splash);
         checkVersion();
+        AlphaAnimation animation = new AlphaAnimation(0.2f, 1);
+        animation.setDuration(2000);
+        rl_splash.startAnimation(animation);
     }
 
     private void checkVersion(){
