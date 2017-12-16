@@ -6,18 +6,27 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.yhx.mobilesecurityguard.R;
 import com.yhx.mobilesecurityguard.utils.ToastUtils;
 import com.yhx.mobilesecurityguard.utils.VersionInformationUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
 
 /**
  * 闪屏页面
@@ -30,10 +39,13 @@ import org.json.JSONObject;
 public class SplashActivity extends Activity {
 
     private TextView tv_splash_edition;
+    private TextView tv_progress;
+
     //10.0.2.2是预留ip，供模拟器访问PC的服务器
     private final static String JSONURL = "http://192.168.2.101:8080/update66.json";
     private final static int CODE_UPDATE_DIALOG = 1;
     private final static int CODE_ENTER_HOME = 2;
+    private final static int CODE_ERROR = 3;
 
     //版本信息
     private String versionName;
@@ -51,6 +63,10 @@ public class SplashActivity extends Activity {
                 case CODE_ENTER_HOME:
                     enterHome();
                     break;
+                case CODE_ERROR:
+                    ToastUtils.showToast(getApplicationContext(), "数据加载异常");
+                    enterHome();
+                    break;
             }
         }
     };
@@ -61,6 +77,9 @@ public class SplashActivity extends Activity {
 
         tv_splash_edition = findViewById(R.id.tv_splash_edition);
         tv_splash_edition.setText("版本名：" + VersionInformationUtils.getVersionName(this));
+
+        tv_progress = findViewById(R.id.tv_progress);
+
         checkVersion();
     }
 
@@ -68,6 +87,7 @@ public class SplashActivity extends Activity {
         new Thread(){
             @Override
             public void run() {
+                long startTime = System.currentTimeMillis();
                 String result = VersionInformationUtils.getResult(JSONURL);
                 Message msg = Message.obtain();
                 try {
@@ -84,10 +104,15 @@ public class SplashActivity extends Activity {
                         msg.what = CODE_ENTER_HOME;
                     }
                 } catch (JSONException e) {
+                    msg.what = CODE_ERROR;
                     e.printStackTrace();
                 } finally {
+                    long endTime = System.currentTimeMillis();
+                    long timeUsed = endTime - startTime;//访问网络使用的时间
                     try {
-                        Thread.sleep(2000);//强制等待一段时间
+                        if (timeUsed < 2000){
+                            Thread.sleep(2000 - timeUsed);//强制等待一段时间,凑够两秒钟
+                        }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -107,13 +132,13 @@ public class SplashActivity extends Activity {
         builder.setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                downloadApk();
             }
         });
         builder.setNegativeButton("以后再说", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                enterHome();
             }
         });
         builder.show();
@@ -124,5 +149,61 @@ public class SplashActivity extends Activity {
      */
     private void enterHome(){
         startActivity(new Intent(this, HomeActivity.class));
+        finish();
+    }
+
+    /**
+     * 下载应用
+     * 权限：<uses-permission android:name="android.permission.INTERNET" />
+     *<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+     */
+    public void downloadApk(){
+        //判断sdcard是否存在
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+            tv_progress.setVisibility(View.VISIBLE);//显示进度
+            String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mobileSecurity.apk";
+            //Xutils
+            HttpUtils utils = new HttpUtils();
+            utils.download(url, path, new RequestCallBack<File>() {
+
+                @Override
+                public void onLoading(long total, long current, boolean isUploading) {
+                    super.onLoading(total, current, isUploading);
+                    //下载进度
+                    int percent = (int) (100 * current / total);
+                    tv_progress.setText("下载进度：" + percent + "%");
+                }
+
+                @Override
+                public void onSuccess(ResponseInfo<File> responseInfo) {
+                    //下载成功
+                    ToastUtils.showToast(getApplicationContext(), responseInfo.result.getAbsolutePath());
+                    //跳转系统安装页面
+                    jumpInstallationApplication(responseInfo.result);
+                }
+
+                @Override
+                public void onFailure(HttpException error, String msg) {
+                    //下载失败
+                    error.printStackTrace();
+                    ToastUtils.showToast(getApplicationContext(), msg);
+                }
+            });
+        }else {
+            ToastUtils.showToast(getApplicationContext(), "未找到sd卡");
+        }
+    }
+
+    /**
+     * 跳转到系统安装页面
+     * @param file
+     */
+    public void jumpInstallationApplication(File file){
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.setDataAndType(Uri.fromFile(file),
+                "application/vnd.android.package-archive");
+        startActivity(intent);
     }
 }
