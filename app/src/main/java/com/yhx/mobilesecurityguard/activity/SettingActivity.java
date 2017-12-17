@@ -7,22 +7,24 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.yhx.mobilesecurityguard.R;
+import com.yhx.mobilesecurityguard.utils.PrefUtils;
 import com.yhx.mobilesecurityguard.view.SettingItemView;
 
 public class SettingActivity extends Activity {
 
     private SettingItemView siv_update;
-    private SharedPreferences sp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        sp = getSharedPreferences("config", MODE_PRIVATE);
-
         siv_update = (SettingItemView) findViewById(R.id.siv_update);
+        initUpdate();
+    }
+
+    private void initUpdate(){
         siv_update.setTitle("自动更新设置");
-        if (sp.getBoolean("auto_update", true)){
+        if (PrefUtils.getBoolean("auto_update", true, this)){
             siv_update.setChecked(true);
             siv_update.setDesc("自动更新已开启");
         }else {
@@ -36,11 +38,11 @@ public class SettingActivity extends Activity {
                 if (siv_update.isChecked()){
                     siv_update.setChecked(false);
                     siv_update.setDesc("自动更新已关闭");
-                    sp.edit().putBoolean("auto_update", false).commit();
+                    PrefUtils.putBoolean("auto_update", false, getApplicationContext());
                 }else {
                     siv_update.setChecked(true);
                     siv_update.setDesc("自动更新已开启");
-                    sp.edit().putBoolean("auto_update", true).commit();
+                    PrefUtils.putBoolean("auto_update", true, getApplicationContext());
                 }
             }
         });

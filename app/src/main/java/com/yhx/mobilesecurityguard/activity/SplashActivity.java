@@ -23,6 +23,7 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.yhx.mobilesecurityguard.R;
+import com.yhx.mobilesecurityguard.utils.PrefUtils;
 import com.yhx.mobilesecurityguard.utils.ToastUtils;
 import com.yhx.mobilesecurityguard.utils.VersionInformationUtils;
 
@@ -44,7 +45,6 @@ public class SplashActivity extends Activity {
     private TextView tv_splash_edition;
     private TextView tv_progress;
     private RelativeLayout rl_splash;
-    private SharedPreferences sp;
 
     //10.0.2.2是预留ip，供模拟器访问PC的服务器
     private final static String JSONURL = "http://192.168.2.101:8080/update66.json";
@@ -84,8 +84,7 @@ public class SplashActivity extends Activity {
         tv_splash_edition.setText("版本名：" + VersionInformationUtils.getVersionName(this));
         tv_progress = findViewById(R.id.tv_progress);
         rl_splash = findViewById(R.id.rl_splash);
-        sp = getSharedPreferences("config", MODE_PRIVATE);
-        if (sp.getBoolean("auto_update", true)){//需要检查版本
+        if (PrefUtils.getBoolean("auto_update", true, this)){//需要检查版本
             checkVersion();
         }else {
             //发送延时2秒的消息，再跳转主页面
