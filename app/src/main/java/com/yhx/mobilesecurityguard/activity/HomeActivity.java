@@ -96,6 +96,8 @@ public class HomeActivity extends Activity {
                         //保存密码
                         PrefUtils.putString("password", Md5Utils.getMd5Encode(pwd), getApplicationContext());
                         dialog.dismiss();
+                        //跳到手机防盗页面
+                        startActivity(new Intent(getApplicationContext(), AntiTheftActivity.class));
                     }else {
                         ToastUtils.showToast(getApplicationContext(), "两次密码不一致");
                     }
@@ -136,6 +138,8 @@ public class HomeActivity extends Activity {
                     if (Md5Utils.getMd5Encode(pwd).equals(savePwd)){
                         //密码正确
                         dialog.dismiss();
+                        //跳到手机防盗页面
+                        startActivity(new Intent(getApplicationContext(), AntiTheftActivity.class));
                     }else {
                         ToastUtils.showToast(getApplicationContext(), "密码错误");
                     }
