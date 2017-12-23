@@ -4,21 +4,24 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
 import com.yhx.mobilesecurityguard.R;
 
-/**
- * 设置向导页面
- */
-public class AntiTheftSetupActivity extends Activity {
+public class AntiTheftSetupThreeActivity extends Activity {
 
-    private Button bt_theft_setup_next;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_anti_theft_setup);
-        bt_theft_setup_next = findViewById(R.id.bt_theft_setup_next);
+        setContentView(R.layout.activity_anti_theft_setup_three);
+    }
+
+    /**
+     * 上一页
+     * @param view
+     */
+    public void previous(View view){
+        startActivity(new Intent(getApplicationContext(), AntiTheftSetupTwoActivity.class));
+        finish();
     }
 
     /**
@@ -26,7 +29,7 @@ public class AntiTheftSetupActivity extends Activity {
      * @param view
      */
     public void next(View view){
-        startActivity(new Intent(getApplicationContext(), AntiTheftSetupTwoActivity.class));
+        startActivity(new Intent(getApplicationContext(), AntiTheftSetupFourActivity.class));
         finish();
     }
 }

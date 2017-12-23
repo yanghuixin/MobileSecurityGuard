@@ -70,14 +70,7 @@
             android:background="@mipmap/setup1"/>
 
         <Button
-            android:id="@+id/bt_anti_theft_setup_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:drawableRight="@mipmap/next"
-            android:drawablePadding="3dp"
-            android:text="下一步"
-            android:background="@drawable/btn_green_selector"/>
+            android:id="@+id/bt_theft_setup_next"
+            style="@style/NextStyle"/>
     </RelativeLayout>
 </LinearLayout>
