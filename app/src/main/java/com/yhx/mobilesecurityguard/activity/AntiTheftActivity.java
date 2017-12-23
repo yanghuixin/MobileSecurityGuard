@@ -2,8 +2,8 @@ package com.yhx.mobilesecurityguard.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 import com.yhx.mobilesecurityguard.R;
 import com.yhx.mobilesecurityguard.utils.PrefUtils;
@@ -24,5 +24,14 @@ public class AntiTheftActivity extends Activity {
         }else {
             setContentView(R.layout.activity_anti_theft);
         }
+    }
+
+    /**
+     * 重新进入设置向导
+     * @param view
+     */
+    public void reSetup(View view) {
+        startActivity(new Intent(this, AntiTheftSetupActivity.class));
+        finish();
     }
 }

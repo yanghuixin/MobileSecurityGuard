@@ -1,14 +1,14 @@
 package com.yhx.mobilesecurityguard.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.yhx.mobilesecurityguard.R;
 import com.yhx.mobilesecurityguard.utils.PrefUtils;
 
-public class AntiTheftSetupFourActivity extends AppCompatActivity {
+public class AntiTheftSetupFourActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
