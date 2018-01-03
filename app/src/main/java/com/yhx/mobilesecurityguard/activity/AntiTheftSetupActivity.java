@@ -11,21 +11,29 @@ import com.yhx.mobilesecurityguard.R;
 /**
  * 设置向导页面
  */
-public class AntiTheftSetupActivity extends Activity {
+public class AntiTheftSetupActivity extends BaseSetupActivity {
 
     private Button bt_theft_setup_next;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anti_theft_setup);
         bt_theft_setup_next = findViewById(R.id.bt_theft_setup_next);
     }
 
     /**
-     * 下一页
-     * @param view
+     * 跳转上一页
      */
-    public void next(View view){
+    @Override
+    public void showPrevious() {
+
+    }
+
+    /**
+     * 跳转下一页
+     */
+    @Override
+    public void showNext() {
         startActivity(new Intent(getApplicationContext(), AntiTheftSetupTwoActivity.class));
         finish();
         //两个activity之间切换的动画,应该放在finish之后运行
