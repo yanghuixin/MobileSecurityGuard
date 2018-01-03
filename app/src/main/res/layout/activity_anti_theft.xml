@@ -64,12 +64,16 @@
     <TextView
         style="@style/ContentStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:layout_marginLeft="0dp"
+        android:paddingTop="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
         android:gravity="left"
         android:text="重新进入设置向导"
         android:onClick="reSetup"
-        android:clickable="true"/>
+        android:clickable="true"
+        android:background="@drawable/text_shape_selector"/>
 
     <ImageView
         android:layout_width="match_parent"

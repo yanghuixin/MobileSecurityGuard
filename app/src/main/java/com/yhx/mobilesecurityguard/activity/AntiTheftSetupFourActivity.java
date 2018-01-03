@@ -23,6 +23,7 @@ public class AntiTheftSetupFourActivity extends Activity {
     public void previous(View view){
         startActivity(new Intent(getApplicationContext(), AntiTheftSetupThreeActivity.class));
         finish();
+        overridePendingTransition(R.anim.anim_previous_in, R.anim.anim_previous_out);
     }
 
     /**
@@ -34,5 +35,7 @@ public class AntiTheftSetupFourActivity extends Activity {
         PrefUtils.putBoolean("configed", true, this);
         startActivity(new Intent(getApplicationContext(), AntiTheftActivity.class));
         finish();
+        //两个activity之间切换的动画,应该放在finish之后运行
+        overridePendingTransition(R.anim.anim_in, R.anim.anim_out);
     }
 }
